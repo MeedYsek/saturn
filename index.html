@@ -4,13 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SATURN — The Jewel of the Solar System</title>
-<meta name="description" content="An interactive feature on Saturn: its rings, moons, and the spacecraft that explored it. Imagery by NASA / JPL-Caltech / SSI." />
+<meta name="description" content="An interactive feature on Saturn — its rings, moons and the spacecraft that explored it. Imagery: NASA / JPL-Caltech / SSI." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --bg:#05030f;--bg2:#0b0820;--star:#f2f4ff;
+    --bg:#04030c;--star:#f2f4ff;
     --violet:#a974ff;--indigo:#6d4bff;--cyan:#36e6ff;--teal:#22f5c8;
     --gold:#ffd24a;--amber:#ff9a4a;--rose:#ff5fa8;--magenta:#ff3df0;--muted:#9aa0cf;
     --serif:'Cormorant Garamond', Georgia, serif;
@@ -19,44 +19,59 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html{background:var(--bg)}
   body{background:transparent;color:var(--star);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-  ::selection{background:var(--gold);color:#05030f}
+  ::selection{background:var(--gold);color:#04030c}
   img{display:block;max-width:100%}
-
   section,nav,footer{position:relative;z-index:2}
 
-  .grad{background:linear-gradient(90deg,var(--gold),var(--amber),var(--rose),var(--violet),var(--cyan),var(--gold));
-    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue 9s linear infinite}
   @keyframes hue{to{background-position:300% 0}}
 
-  /* cosmic backdrop */
+  /* ===== fixed cosmic backdrop ===== */
   #sky{position:fixed;inset:0;z-index:0;
-    background:radial-gradient(120% 80% at 50% -10%,#241845 0%,#120a30 42%,#07041a 75%,#05030f 100%)}
-  #aurora{position:fixed;inset:-20% -10%;z-index:0;pointer-events:none;filter:blur(70px);opacity:.7;
+    background:radial-gradient(120% 80% at 50% -10%,#241845 0%,#120a30 42%,#07041a 75%,#04030c 100%)}
+  #aurora{position:fixed;inset:-20% -10%;z-index:0;pointer-events:none;filter:blur(70px);opacity:.6;
     background:
-      radial-gradient(38% 44% at 18% 22%,rgba(255,154,74,.45),transparent 60%),
-      radial-gradient(40% 46% at 82% 28%,rgba(54,230,255,.4),transparent 62%),
-      radial-gradient(46% 50% at 60% 80%,rgba(109,75,255,.5),transparent 60%),
-      radial-gradient(34% 40% at 30% 86%,rgba(255,210,74,.35),transparent 60%);
+      radial-gradient(38% 44% at 18% 22%,rgba(255,154,74,.42),transparent 60%),
+      radial-gradient(40% 46% at 82% 28%,rgba(54,230,255,.38),transparent 62%),
+      radial-gradient(46% 50% at 60% 80%,rgba(109,75,255,.48),transparent 60%),
+      radial-gradient(34% 40% at 30% 86%,rgba(255,210,74,.33),transparent 60%);
     animation:aurora 24s ease-in-out infinite alternate}
   @keyframes aurora{0%{transform:translate3d(-3%,-2%,0) scale(1) rotate(0deg)}
     50%{transform:translate3d(4%,3%,0) scale(1.15) rotate(8deg)}
     100%{transform:translate3d(-2%,4%,0) scale(1.05) rotate(-6deg)}}
   #stars{position:fixed;inset:0;z-index:0;pointer-events:none}
-  .nebula{position:fixed;border-radius:50%;filter:blur(70px);z-index:0;opacity:.55;pointer-events:none;
+  .nebula{position:fixed;border-radius:50%;filter:blur(70px);z-index:0;opacity:.5;pointer-events:none;
     mix-blend-mode:screen;animation:nebpulse 16s ease-in-out infinite alternate}
   @keyframes nebpulse{from{filter:blur(70px) hue-rotate(0deg)}to{filter:blur(95px) hue-rotate(30deg)}}
-  .neb-a{width:46vw;height:46vw;left:-8vw;top:8vh;background:radial-gradient(circle,rgba(255,210,74,.55),transparent 65%)}
-  .neb-b{width:40vw;height:40vw;right:-6vw;top:48vh;background:radial-gradient(circle,rgba(54,230,255,.5),transparent 65%);animation-delay:-6s}
-  .neb-c{width:52vw;height:52vw;left:18vw;top:124vh;background:radial-gradient(circle,rgba(109,75,255,.5),transparent 65%);animation-delay:-10s}
+  .neb-a{width:46vw;height:46vw;left:-8vw;top:6vh;background:radial-gradient(circle,rgba(255,210,74,.5),transparent 65%)}
+  .neb-b{width:40vw;height:40vw;right:-6vw;top:50vh;background:radial-gradient(circle,rgba(54,230,255,.46),transparent 65%);animation-delay:-6s}
+  .neb-c{width:52vw;height:52vw;left:18vw;top:128vh;background:radial-gradient(circle,rgba(109,75,255,.46),transparent 65%);animation-delay:-10s}
 
-  .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.04;
+  /* ===== the star of the show: floating Saturn ===== */
+  #saturn{position:fixed;inset:0;z-index:1;pointer-events:none;display:grid;place-items:center;mix-blend-mode:screen}
+  #saturn .mouse{width:min(150vh,1500px);height:min(150vh,1500px);display:grid;place-items:center;will-change:transform}
+  #saturn .scroll{position:relative;width:100%;height:100%;display:grid;place-items:center;will-change:transform}
+  #saturn .glow{position:absolute;width:70%;height:70%;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,200,120,.30),rgba(255,150,90,.10) 45%,transparent 70%);
+    filter:blur(20px);animation:glowpulse 7s ease-in-out infinite alternate}
+  @keyframes glowpulse{from{opacity:.7;transform:scale(.96)}to{opacity:1;transform:scale(1.06)}}
+  #saturn .planet{position:absolute;inset:0;background:center/contain no-repeat;
+    background-image:url("https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia06/pia06193/PIA06193.jpg?w=2200");
+    filter:saturate(1.16) contrast(1.16) brightness(0.98);animation:float 9s ease-in-out infinite;
+    -webkit-mask-image:radial-gradient(ellipse 60% 56% at 50% 50%,#000 58%,rgba(0,0,0,.4) 74%,transparent 86%);
+    mask-image:radial-gradient(ellipse 60% 56% at 50% 50%,#000 58%,rgba(0,0,0,.4) 74%,transparent 86%)}
+  @keyframes float{0%,100%{transform:translateY(-10px)}50%{transform:translateY(10px)}}
+
+  /* cinematic framing */
+  .vignette{position:fixed;inset:0;z-index:3;pointer-events:none;
+    box-shadow:inset 0 0 220px 30px rgba(2,2,10,.75),inset 0 0 80px rgba(2,2,10,.5)}
+  .grain{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.04;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
   .progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:1000;
     background:linear-gradient(90deg,var(--gold),var(--amber),var(--cyan));box-shadow:0 0 14px var(--gold)}
 
   nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);width:min(94%,1200px);z-index:900;
     display:flex;justify-content:space-between;align-items:center;padding:14px 26px;border-radius:60px;
-    background:rgba(18,10,40,.4);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+    background:rgba(14,8,32,.45);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
     border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 40px rgba(109,75,255,.18)}
   nav .logo{font-family:var(--serif);font-size:24px;letter-spacing:.34em;font-weight:500;
     background:linear-gradient(90deg,var(--gold),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -65,52 +80,61 @@
   nav .links a:hover{opacity:1}
   @media(max-width:720px){nav{padding:12px 20px}.links{display:none}}
 
-  .wrap{max-width:1280px;margin:0 auto;padding:0 48px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 48px}
   @media(max-width:720px){.wrap{padding:0 22px}}
 
-  /* HERO */
-  .hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden}
-  .hero-bg{position:absolute;inset:-8%;z-index:-1;background-size:cover;background-position:center;
-    background-image:radial-gradient(circle at 70% 40%,rgba(255,180,90,.25),transparent 55%),
-      url("https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia21/pia21345/PIA21345.jpg?w=2400");
-    will-change:transform}
-  .hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-    background:radial-gradient(ellipse at center,transparent 30%,rgba(5,3,15,.55) 70%,rgba(5,3,15,.92) 100%)}
+  /* ===== HERO ===== */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse 52% 46% at 50% 52%,rgba(4,3,12,.72),rgba(4,3,12,.32) 60%,transparent 78%)}
   .hero .kicker{font-size:12px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:26px;opacity:0;
     text-shadow:0 0 18px rgba(255,210,74,.5)}
-  .hero h1{font-family:var(--serif);font-weight:400;line-height:.86;font-size:clamp(64px,17vw,260px);letter-spacing:-.02em;
-    text-shadow:0 4px 60px rgba(0,0,0,.6)}
+  .hero h1{font-family:var(--serif);font-weight:400;line-height:.84;font-size:clamp(72px,19vw,300px);letter-spacing:-.02em;
+    text-shadow:0 6px 70px rgba(0,0,0,.7)}
   .hero h1 .line{display:block;overflow:hidden}
   .hero h1 .line span{display:block;transform:translateY(110%)}
   .hero h1 em{font-style:italic;background:linear-gradient(90deg,var(--gold),var(--amber),var(--rose),var(--gold));
     background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:hue 8s linear infinite;filter:drop-shadow(0 0 26px rgba(255,180,90,.5))}
-  .hero .sub{margin-top:30px;max-width:560px;font-size:15px;line-height:1.7;color:#d7d8ec;opacity:0}
-  .scrollcue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-size:11px;
+    animation:hue 8s linear infinite;filter:drop-shadow(0 0 30px rgba(255,180,90,.55))}
+  .hero .sub{margin-top:30px;max-width:560px;font-size:15px;line-height:1.7;color:#dcdcef;opacity:0;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+  .scrollcue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-size:11px;
     letter-spacing:.3em;text-transform:uppercase;color:var(--muted);opacity:0;display:flex;flex-direction:column;align-items:center;gap:12px}
   .scrollcue .bar{width:1px;height:46px;background:linear-gradient(var(--gold),transparent);animation:drop 1.8s infinite}
   @keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}
     51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
-  /* MANIFESTO */
-  .manifesto{padding:32vh 0;display:flex;justify-content:center}
-  .manifesto p{font-family:var(--serif);font-weight:400;font-size:clamp(30px,5vw,66px);line-height:1.25;max-width:1000px;text-align:center}
-  .manifesto .word{opacity:.12}
+  /* ===== MANIFESTO ===== */
+  .manifesto{padding:30vh 0;display:flex;justify-content:center}
+  .manifesto p{font-family:var(--serif);font-weight:400;font-size:clamp(30px,5vw,66px);line-height:1.25;max-width:1000px;text-align:center;
+    text-shadow:0 2px 30px rgba(0,0,0,.7)}
+  .manifesto .word{opacity:.14}
   .manifesto em{font-style:italic;background:linear-gradient(90deg,var(--gold),var(--amber));
     -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(255,210,74,.45))}
 
-  /* MOONS — horizontal */
+  /* ===== STATS ===== */
+  .stats{padding:14vh 0}
+  .stats .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  @media(max-width:720px){.stats .grid{grid-template-columns:1fr;gap:22px}}
+  .stat{text-align:center;padding:34px 24px;border-radius:20px;
+    background:rgba(14,8,32,.4);backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);
+    border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .stat .n{font-family:var(--serif);font-size:clamp(54px,8vw,116px);font-weight:400;line-height:1;
+    background:linear-gradient(90deg,var(--gold),var(--amber),var(--rose),var(--cyan),var(--gold));
+    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:hue 8s linear infinite;filter:drop-shadow(0 0 24px rgba(255,180,90,.3))}
+  .stat .l{margin-top:12px;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+
+  /* ===== MOONS — horizontal ===== */
   .horiz{height:100vh;overflow:hidden}
   .track{display:flex;height:100vh;will-change:transform}
   .panel{flex:0 0 70vw;height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
   .panel .num{position:absolute;top:15vh;left:6vw;font-family:var(--serif);font-style:italic;font-size:130px;color:rgba(242,244,255,.06)}
-  .orb{width:46vh;height:46vh;border-radius:50%;position:relative;flex:none;overflow:hidden;
-    background-size:cover;background-position:center;
-    box-shadow:0 0 120px 8px rgba(255,180,90,.35),0 0 60px rgba(54,230,255,.22),inset -22px -16px 60px rgba(0,0,0,.55)}
+  .orb{width:46vh;height:46vh;border-radius:50%;position:relative;flex:none;overflow:hidden;background-size:cover;background-position:center;
+    box-shadow:0 0 120px 8px rgba(255,180,90,.32),0 0 60px rgba(54,230,255,.2),inset -22px -16px 60px rgba(0,0,0,.55)}
   .orb::after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(242,244,255,.12)}
   .body-meta{margin-left:6vw;max-width:380px;padding:30px 28px;border-radius:20px;
-    background:rgba(18,10,40,.42);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
-    border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    background:rgba(14,8,32,.5);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
+    border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 60px rgba(0,0,0,.45)}
   .body-meta .label{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--cyan)}
   .body-meta h3{font-family:var(--serif);font-size:clamp(36px,4.5vw,62px);font-weight:500;line-height:1;margin:8px 0 14px}
   .body-meta p{font-size:14px;line-height:1.7;color:#c5c8e4}
@@ -119,58 +143,35 @@
   .intro-h h2{font-family:var(--serif);font-size:clamp(40px,6vw,90px);font-weight:400;line-height:.95;margin-top:10px}
   @media(max-width:720px){.panel{flex:0 0 92vw;flex-direction:column}.body-meta{margin:26px 0 0;text-align:center}.orb{width:36vh;height:36vh}}
 
-  /* RINGS — editorial parallax */
+  /* ===== RINGS — editorial ===== */
   .editorial{padding:22vh 0;overflow:hidden}
-  .editorial .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:80px;align-items:center}
-  @media(max-width:860px){.editorial .grid{grid-template-columns:1fr;gap:48px}}
-  .editorial .visual{height:76vh;border-radius:16px;overflow:hidden;position:relative;
-    border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 110px rgba(109,75,255,.3);
-    background:linear-gradient(160deg,#1a0a32,#2a1060)}
+  .editorial .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:72px;align-items:center}
+  @media(max-width:860px){.editorial .grid{grid-template-columns:1fr;gap:44px}}
+  .editorial .visual{height:74vh;border-radius:16px;overflow:hidden;position:relative;
+    border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 110px rgba(109,75,255,.3);background:linear-gradient(160deg,#160826,#26105a)}
   .editorial .visual .img{position:absolute;inset:-12% 0;will-change:transform;background-size:cover;background-position:center;
     background-image:url("https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia17/pia17172/PIA17172.jpg?w=1800")}
   .editorial .label{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold)}
-  .editorial h2{font-family:var(--serif);font-size:clamp(40px,5.5vw,80px);font-weight:400;line-height:1;margin:18px 0 26px}
+  .editorial h2{font-family:var(--serif);font-size:clamp(40px,5.5vw,78px);font-weight:400;line-height:1;margin:18px 0 24px}
   .editorial h2 em{font-style:italic;background:linear-gradient(90deg,var(--cyan),var(--teal));
     -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(54,230,255,.4))}
-  .editorial .body{font-size:16px;line-height:1.8;color:#c8cce4;max-width:460px}
-  .editorial .credit,.figcredit{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-top:18px;text-transform:uppercase}
+  .editorial .body{font-size:16px;line-height:1.8;color:#cccfe6;max-width:460px}
+  .editorial .figcredit{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-top:18px;text-transform:uppercase}
   .reveal{opacity:0;transform:translateY(40px)}
 
-  /* ZOOM into Saturn */
-  .zoom{height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .zoom .frame{width:40vh;height:40vh;border-radius:50%;position:relative;will-change:transform;overflow:hidden;
-    background:radial-gradient(circle at 32% 30%,#fff0d6,#ffb347 30%,#d98a2b 55%,#7a4a1e 78%,#2a1606);
-    box-shadow:0 0 160px 26px rgba(255,180,90,.45),0 0 90px rgba(54,230,255,.18),inset -34px -20px 80px rgba(0,0,0,.55)}
-  .zoom .frame::before{content:"";position:absolute;inset:0;border-radius:50%;
-    background:repeating-linear-gradient(180deg,rgba(255,255,255,.06) 0 6px,rgba(0,0,0,.08) 6px 13px)}
-  .zoom .ring{position:absolute;width:80vh;height:22vh;border-radius:50%;left:50%;top:50%;
-    transform:translate(-50%,-50%) rotate(-20deg);border:2px solid rgba(255,210,74,.5);
-    box-shadow:0 0 40px rgba(255,210,74,.35),inset 0 0 30px rgba(54,230,255,.2)}
-  .zoom .caption{position:absolute;text-align:center;z-index:5;mix-blend-mode:screen}
-  .zoom .caption h2{font-family:var(--serif);font-size:clamp(40px,8vw,120px);font-weight:400;line-height:.9}
-  .zoom .caption .label{font-size:12px;letter-spacing:.4em;text-transform:uppercase;margin-top:14px;color:var(--gold)}
-
-  /* STATS */
-  .stats{padding:20vh 0}
-  .stats .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;text-align:center}
-  @media(max-width:720px){.stats .grid{grid-template-columns:1fr;gap:60px}}
-  .stat .n{font-family:var(--serif);font-size:clamp(54px,9vw,128px);font-weight:400;line-height:1;
-    background:linear-gradient(90deg,var(--gold),var(--amber),var(--rose),var(--cyan),var(--gold));
-    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:hue 8s linear infinite;filter:drop-shadow(0 0 24px rgba(255,180,90,.3))}
-  .stat .l{margin-top:12px;font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
-
-  /* MARQUEE */
-  .marquee{padding:13vh 0;border-top:1px solid rgba(242,244,255,.1);border-bottom:1px solid rgba(242,244,255,.1);overflow:hidden;white-space:nowrap}
+  /* ===== MARQUEE ===== */
+  .marquee{padding:12vh 0;border-top:1px solid rgba(242,244,255,.1);border-bottom:1px solid rgba(242,244,255,.1);overflow:hidden;white-space:nowrap}
   .marquee .row{display:inline-block;font-family:var(--serif);font-style:italic;font-size:clamp(48px,9vw,150px);will-change:transform;
     background:linear-gradient(90deg,var(--gold),var(--amber),var(--rose),var(--violet),var(--cyan),var(--gold));
     background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue 10s linear infinite}
   .marquee .dot{-webkit-text-fill-color:var(--cyan)}
 
-  /* CTA */
-  .cta{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding:20vh 0 0}
+  /* ===== CTA ===== */
+  .cta{padding:26vh 0 24vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .cta::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(4,3,12,.6),transparent 72%)}
   .cta .label{font-size:12px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold)}
-  .cta h2{font-family:var(--serif);font-size:clamp(56px,13vw,200px);font-weight:400;line-height:.9;margin:24px 0}
+  .cta h2{font-family:var(--serif);font-size:clamp(56px,13vw,200px);font-weight:400;line-height:.9;margin:24px 0;text-shadow:0 6px 50px rgba(0,0,0,.6)}
   .cta h2 em{font-style:italic;background:linear-gradient(90deg,var(--gold),var(--amber),var(--rose),var(--gold));
     background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
     animation:hue 8s linear infinite;filter:drop-shadow(0 0 30px rgba(255,180,90,.4))}
@@ -178,8 +179,8 @@
     letter-spacing:.26em;text-transform:uppercase;color:#1a0e02;cursor:pointer;transition:.4s;text-decoration:none;
     background:linear-gradient(90deg,var(--gold),var(--amber),var(--rose));background-size:200% 100%;box-shadow:0 0 40px rgba(255,180,90,.45)}
   .cta .btn:hover{background-position:100% 0;box-shadow:0 0 70px rgba(255,120,180,.6);transform:translateY(-2px)}
-  footer{padding:60px 48px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;font-size:12px;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border-top:1px solid rgba(242,244,255,.08);margin-top:14vh}
+  footer{padding:54px 48px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border-top:1px solid rgba(242,244,255,.08)}
 </style>
 </head>
 <body>
@@ -189,6 +190,18 @@
 <div class="nebula neb-a"></div>
 <div class="nebula neb-b"></div>
 <div class="nebula neb-c"></div>
+
+<!-- floating Saturn background -->
+<div id="saturn">
+  <div class="mouse">
+    <div class="scroll">
+      <div class="glow"></div>
+      <div class="planet"></div>
+    </div>
+  </div>
+</div>
+
+<div class="vignette"></div>
 <div class="grain"></div>
 <div class="progress" id="progress"></div>
 
@@ -204,19 +217,29 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
   <div class="kicker">The sixth planet · The ringed giant</div>
   <h1>
     <span class="line"><span>Behold</span></span>
     <span class="line"><span><em>Saturn</em></span></span>
   </h1>
-  <p class="sub">A colossal world of gas and ice, crowned by the most magnificent ring system in the Sun's family — seen here through the eyes of NASA's Cassini, Hubble, and Webb.</p>
+  <p class="sub">A colossal world of gas and ice, crowned by the most magnificent ring system in the Sun's family — seen here through the eyes of NASA's Cassini, Hubble and Webb.</p>
   <div class="scrollcue"><span>Descend</span><span class="bar"></span></div>
 </section>
 
 <!-- MANIFESTO -->
 <section class="manifesto" id="about">
   <p id="manifesto-text">Saturn is a world with no solid surface — a <em>giant ball of gas</em> so light it would <em>float on water</em>, encircled by rings of ice that stretch most of the way to the Moon.</p>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="scale">
+  <div class="wrap">
+    <div class="grid">
+      <div class="stat"><div class="n" data-count="274">0</div><div class="l">Confirmed moons (2025)</div></div>
+      <div class="stat"><div class="n" data-count="29" data-suffix="½">0</div><div class="l">Earth-years per orbit</div></div>
+      <div class="stat"><div class="n" data-count="764">0</div><div class="l">Earths could fit inside</div></div>
+    </div>
+  </div>
 </section>
 
 <!-- MOONS -->
@@ -228,11 +251,11 @@
     <div class="panel"><div class="num">01</div>
       <div class="orb" style="background-image:url('https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia20/pia20016/PIA20016.jpg?w=1100')"></div>
       <div class="body-meta"><div class="label">Largest moon</div><h3>Titan</h3>
-        <p>Bigger than the planet Mercury and wrapped in a thick orange haze, Titan has rivers, lakes, and seas of liquid methane — the only other world with stable surface liquid.</p></div></div>
+        <p>Bigger than the planet Mercury and wrapped in thick orange haze, Titan has rivers, lakes and seas of liquid methane — the only other world with stable surface liquid.</p></div></div>
     <div class="panel"><div class="num">02</div>
       <div class="orb" style="background-image:url('https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia17/pia17202/PIA17202.jpg?w=1100')"></div>
       <div class="body-meta"><div class="label">Ocean world</div><h3>Enceladus</h3>
-        <p>A tiny, brilliant-white moon that fires geysers of water vapor from a hidden global ocean into space — feeding Saturn's faint E ring and hinting at habitability.</p></div></div>
+        <p>A tiny, brilliant-white moon that fires geysers of water vapour from a hidden global ocean into space — feeding Saturn's faint E ring and hinting at habitability.</p></div></div>
     <div class="panel"><div class="num">03</div>
       <div class="orb" style="background:radial-gradient(circle at 36% 32%,#dfe2ea,#a7adba 44%,#5d626f 74%,#2a2d36)"></div>
       <div class="body-meta"><div class="label">The Death Star moon</div><h3>Mimas</h3>
@@ -252,27 +275,9 @@
       <div>
         <div class="label reveal">The Rings</div>
         <h2 class="reveal">Ice, dust &amp;<br><em>starlight</em></h2>
-        <p class="body reveal">Saturn's rings span up to about 282,000 km — roughly the Earth–Moon distance — yet in most places they are only around 10 meters thick. Built from 99.8% water ice, the particles range from specks of dust to chunks the size of houses, herded into crisp gaps by tiny shepherd moons. Remarkably, they may be only ~100 million years old, meaning the dinosaurs never saw them.</p>
+        <p class="body reveal">Saturn's rings span up to about 282,000 km — roughly the Earth–Moon distance — yet in most places they are only around 10 metres thick. Built from 99.8% water ice, the particles range from specks of dust to chunks the size of houses, herded into crisp gaps by tiny shepherd moons. Remarkably, they may be only ~100 million years old, meaning the dinosaurs never saw them.</p>
         <p class="figcredit reveal">Above: "The Day the Earth Smiled" — Cassini, backlit by Saturn. NASA / JPL-Caltech / SSI</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ZOOM -->
-<section class="zoom">
-  <div class="ring"></div>
-  <div class="caption"><h2>Closer</h2><div class="label">A giant of gas &amp; storm</div></div>
-  <div class="frame" id="zoomFrame"></div>
-</section>
-
-<!-- STATS -->
-<section class="stats" id="scale">
-  <div class="wrap">
-    <div class="grid">
-      <div class="stat"><div class="n" data-count="274">0</div><div class="l">Confirmed moons (2025)</div></div>
-      <div class="stat"><div class="n" data-count="29" data-suffix="½">0</div><div class="l">Earth-years per orbit</div></div>
-      <div class="stat"><div class="n" data-count="764">0</div><div class="l">Earths could fit inside</div></div>
     </div>
   </div>
 </section>
@@ -287,64 +292,50 @@
   <div class="label">Keep looking up</div>
   <h2>Reach for<br><em>the rings</em></h2>
   <a href="https://science.nasa.gov/saturn/" target="_blank" rel="noopener" class="btn">Explore Saturn at NASA →</a>
-  <footer>
-    <span>Imagery: NASA / JPL-Caltech / SSI · Cassini</span>
-    <span>Facts: NASA Science · IAU MPC (Mar 2025)</span>
-    <span>A non-commercial educational demo</span>
-  </footer>
 </section>
+
+<footer>
+  <span>Imagery: NASA / JPL-Caltech / SSI · Cassini</span>
+  <span>Facts: NASA Science · IAU MPC (Mar 2025)</span>
+  <span>Made by TT</span>
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script>
 (function(){
-  /* ============ STARFIELD ============ */
+  /* ===== starfield ===== */
   var cv=document.getElementById('stars'),ctx=cv.getContext('2d');
   var stars=[],shooting=[],W,H,scrollY=0;
   function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;
     cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';build();}
-  var palette=[42,32,330,290,190]; // gold, amber, rose, violet, cyan
-  function build(){
-    stars=[];var count=Math.round((innerWidth*innerHeight)/2300);
-    for(var i=0;i<count;i++){
-      stars.push({x:Math.random()*W,y:Math.random()*H*3,
-        r:(Math.random()*1.6+0.35)*devicePixelRatio,z:Math.random()*0.7+0.3,
-        tw:Math.random()*Math.PI*2,ts:Math.random()*0.04+0.01,
-        h:Math.random()<0.4?palette[(Math.random()*palette.length)|0]:0});
-    }
-  }
-  function spawnShoot(){
-    shooting.push({x:Math.random()*W*0.6+W*0.2,y:Math.random()*H*0.4,
-      len:(Math.random()*180+120)*devicePixelRatio,
-      vx:(Math.random()*4+6)*devicePixelRatio,vy:(Math.random()*2+3)*devicePixelRatio,
-      life:0,max:Math.random()*40+40});
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);var off=scrollY*devicePixelRatio;
-    for(var i=0;i<stars.length;i++){var s=stars[i];
-      var y=(s.y-off*s.z)%(H*3);if(y<0)y+=H*3;if(y>H+4)continue;
-      s.tw+=s.ts;var a=0.45+0.55*Math.abs(Math.sin(s.tw));
-      ctx.beginPath();
+  var palette=[42,32,330,290,190];
+  function build(){stars=[];var count=Math.round((innerWidth*innerHeight)/2300);
+    for(var i=0;i<count;i++){stars.push({x:Math.random()*W,y:Math.random()*H*3,
+      r:(Math.random()*1.6+0.35)*devicePixelRatio,z:Math.random()*0.7+0.3,
+      tw:Math.random()*Math.PI*2,ts:Math.random()*0.04+0.01,
+      h:Math.random()<0.4?palette[(Math.random()*palette.length)|0]:0});}}
+  function spawnShoot(){shooting.push({x:Math.random()*W*0.6+W*0.2,y:Math.random()*H*0.4,
+    len:(Math.random()*180+120)*devicePixelRatio,vx:(Math.random()*4+6)*devicePixelRatio,
+    vy:(Math.random()*2+3)*devicePixelRatio,life:0,max:Math.random()*40+40});}
+  function draw(){ctx.clearRect(0,0,W,H);var off=scrollY*devicePixelRatio;
+    for(var i=0;i<stars.length;i++){var s=stars[i];var y=(s.y-off*s.z)%(H*3);if(y<0)y+=H*3;if(y>H+4)continue;
+      s.tw+=s.ts;var a=0.45+0.55*Math.abs(Math.sin(s.tw));ctx.beginPath();
       ctx.fillStyle=s.h?'hsla('+s.h+',95%,72%,'+a+')':'rgba(242,244,255,'+a+')';
       ctx.arc(s.x,y,s.r,0,Math.PI*2);ctx.fill();
-      if(s.r>1.1){ctx.beginPath();
-        ctx.fillStyle=s.h?'hsla('+s.h+',95%,65%,'+(a*0.28)+')':'rgba(200,215,255,'+(a*0.2)+')';
-        ctx.arc(s.x,y,s.r*3.2,0,Math.PI*2);ctx.fill();}
-    }
+      if(s.r>1.1){ctx.beginPath();ctx.fillStyle=s.h?'hsla('+s.h+',95%,65%,'+(a*0.28)+')':'rgba(200,215,255,'+(a*0.2)+')';
+        ctx.arc(s.x,y,s.r*3.2,0,Math.PI*2);ctx.fill();}}
     for(var j=shooting.length-1;j>=0;j--){var sh=shooting[j];sh.life++;sh.x+=sh.vx;sh.y+=sh.vy;
       var g=ctx.createLinearGradient(sh.x,sh.y,sh.x-sh.len,sh.y-sh.len*(sh.vy/sh.vx));
       g.addColorStop(0,'rgba(255,240,210,0.9)');g.addColorStop(1,'rgba(255,240,210,0)');
       ctx.strokeStyle=g;ctx.lineWidth=2*devicePixelRatio;ctx.beginPath();
       ctx.moveTo(sh.x,sh.y);ctx.lineTo(sh.x-sh.len,sh.y-sh.len*(sh.vy/sh.vx));ctx.stroke();
-      if(sh.life>sh.max||sh.x>W)shooting.splice(j,1);
-    }
-    requestAnimationFrame(draw);
-  }
+      if(sh.life>sh.max||sh.x>W)shooting.splice(j,1);}
+    requestAnimationFrame(draw);}
   size();addEventListener('resize',size);draw();
   setInterval(function(){if(Math.random()<0.7)spawnShoot();},2600);
 
-  /* ============ GSAP ============ */
   if(!window.gsap){return;}
   gsap.registerPlugin(ScrollTrigger);
   var lenis=null;
@@ -356,34 +347,59 @@
   gsap.to('#progress',{width:'100%',ease:'none',
     scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:0.3}});
 
-  /* HERO */
+  /* HERO intro */
   var tl=gsap.timeline({defaults:{ease:'expo.out'}});
   tl.to('.hero h1 .line span',{y:'0%',duration:1.3,stagger:0.12},0.2)
     .to('.hero .kicker',{opacity:1,duration:1},0.5)
     .to('.hero .sub',{opacity:1,duration:1},0.9)
     .to('.scrollcue',{opacity:1,duration:1},1.1);
-  gsap.fromTo('.hero-bg',{scale:1.15},{scale:1.32,ease:'none',
-    scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
-  gsap.to('.hero h1, .hero .kicker, .hero .sub',{yPercent:-26,opacity:0.1,ease:'none',
-    scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
 
+  /* SATURN scroll choreography — drifts, scales, rotates across the whole page */
+  gsap.timeline({scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:1}})
+    .to('#saturn .scroll',{xPercent:20,yPercent:-10,scale:0.7,rotation:6,ease:'none'},0)
+    .to('#saturn .scroll',{xPercent:-20,yPercent:8,scale:0.6,rotation:13,ease:'none'},0.45)
+    .to('#saturn .scroll',{xPercent:12,yPercent:-4,scale:0.74,rotation:19,ease:'none'},0.78)
+    .to('#saturn .scroll',{xPercent:0,yPercent:0,scale:1.05,rotation:26,ease:'none'},1);
+
+  /* fade Saturn down during the moon gallery so nothing clashes */
+  ScrollTrigger.create({trigger:'.horiz',start:'top 65%',end:'bottom 35%',
+    onToggle:function(self){gsap.to('#saturn',{opacity:self.isActive?0.12:1,duration:0.6,overwrite:true});}});
+
+  /* mouse parallax on Saturn */
+  var setX=gsap.quickTo('#saturn .mouse','xPercent',{duration:0.8,ease:'power3'});
+  var setY=gsap.quickTo('#saturn .mouse','yPercent',{duration:0.8,ease:'power3'});
+  window.addEventListener('pointermove',function(e){
+    var nx=(e.clientX/window.innerWidth-0.5),ny=(e.clientY/window.innerHeight-0.5);
+    setX(nx*4);setY(ny*4);
+  });
+
+  /* nebula drift */
   gsap.to('.neb-a',{y:-160,ease:'none',scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:true}});
   gsap.to('.neb-b',{y:-280,ease:'none',scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:true}});
   gsap.to('.neb-c',{y:-120,ease:'none',scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:true}});
 
-  /* MANIFESTO */
+  /* MANIFESTO word scrub */
   var mp=document.getElementById('manifesto-text');
   mp.innerHTML=mp.innerHTML.replace(/(<em>.*?<\/em>)|([^\s<]+)/g,function(m,em,word){
     return '<span class="word">'+(em||word)+'</span>';});
   gsap.to('.manifesto .word',{opacity:1,stagger:0.4,ease:'none',
     scrollTrigger:{trigger:'.manifesto',start:'top 75%',end:'bottom 60%',scrub:true}});
 
+  /* STATS reveal + counters */
+  gsap.utils.toArray('.stat').forEach(function(el,i){
+    gsap.from(el,{y:50,opacity:0,duration:1,ease:'expo.out',delay:i*0.1,scrollTrigger:{trigger:'.stats',start:'top 78%'}});
+  });
+  gsap.utils.toArray('.stat .n').forEach(function(el){
+    var end=+el.dataset.count,suf=el.dataset.suffix||'',obj={v:0};
+    ScrollTrigger.create({trigger:el,start:'top 85%',once:true,onEnter:function(){
+      gsap.to(obj,{v:end,duration:2,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(obj.v)+suf;}});}});
+  });
+
   /* MOONS horizontal pin */
   var track=document.getElementById('track');
   function dist(){return track.scrollWidth-window.innerWidth;}
   var hs=gsap.to(track,{x:function(){return -dist();},ease:'none',
-    scrollTrigger:{trigger:'.horiz',start:'top top',end:function(){return '+='+dist();},
-      pin:true,scrub:1,invalidateOnRefresh:true}});
+    scrollTrigger:{trigger:'.horiz',start:'top top',end:function(){return '+='+dist();},pin:true,scrub:1,invalidateOnRefresh:true}});
   gsap.utils.toArray('.orb').forEach(function(o){
     gsap.fromTo(o,{rotate:-6,scale:0.92},{rotate:6,scale:1,ease:'none',
       scrollTrigger:{trigger:o,containerAnimation:hs,start:'left right',end:'right left',scrub:true}});
@@ -391,35 +407,16 @@
 
   /* RINGS reveals + parallax */
   gsap.utils.toArray('.editorial .reveal').forEach(function(el,i){
-    gsap.to(el,{opacity:1,y:0,duration:1.1,ease:'expo.out',delay:i*0.1,
-      scrollTrigger:{trigger:el,start:'top 85%'}});
+    gsap.to(el,{opacity:1,y:0,duration:1.1,ease:'expo.out',delay:i*0.1,scrollTrigger:{trigger:el,start:'top 85%'}});
   });
   gsap.to('.editorial .img',{yPercent:-18,ease:'none',
     scrollTrigger:{trigger:'.editorial',start:'top bottom',end:'bottom top',scrub:true}});
 
-  /* ZOOM */
-  gsap.fromTo('#zoomFrame',{scale:0.55},{scale:2.6,ease:'none',
-    scrollTrigger:{trigger:'.zoom',start:'top top',end:'+=150%',pin:true,scrub:true}});
-  gsap.fromTo('.zoom .ring',{opacity:0,scale:0.6,rotate:-20},{opacity:1,scale:1.15,rotate:-12,ease:'none',
-    scrollTrigger:{trigger:'.zoom',start:'top top',end:'+=150%',scrub:true}});
-  gsap.to('.zoom .caption',{opacity:0,scale:1.4,ease:'none',
-    scrollTrigger:{trigger:'.zoom',start:'top top',end:'+=70%',scrub:true}});
-
-  /* STATS counters */
-  gsap.utils.toArray('.stat .n').forEach(function(el){
-    var end=+el.dataset.count,suf=el.dataset.suffix||'',obj={v:0};
-    ScrollTrigger.create({trigger:el,start:'top 85%',once:true,onEnter:function(){
-      gsap.to(obj,{v:end,duration:2,ease:'power2.out',
-        onUpdate:function(){el.textContent=Math.round(obj.v)+suf;}});}});
-  });
-
   /* MARQUEE */
-  gsap.to('#marquee',{xPercent:-50,ease:'none',
-    scrollTrigger:{trigger:'.marquee',start:'top bottom',end:'bottom top',scrub:1}});
+  gsap.to('#marquee',{xPercent:-50,ease:'none',scrollTrigger:{trigger:'.marquee',start:'top bottom',end:'bottom top',scrub:1}});
 
   /* CTA */
-  gsap.from('.cta h2',{y:80,opacity:0,duration:1.2,ease:'expo.out',
-    scrollTrigger:{trigger:'.cta',start:'top 70%'}});
+  gsap.from('.cta h2',{y:80,opacity:0,duration:1.2,ease:'expo.out',scrollTrigger:{trigger:'.cta',start:'top 75%'}});
 
   document.querySelectorAll('nav a[href^="#"]').forEach(function(a){
     a.addEventListener('click',function(e){e.preventDefault();
